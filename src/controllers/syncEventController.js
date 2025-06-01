@@ -1,20 +1,12 @@
-// src/controllers/syncEventController.js
 const SyncEvent = require('../models/SyncEvent');
 const { checkThreeConsecutiveFailures } = require('../utils/notifications');
 const mongoose = require('mongoose');
 
-/**
- * POST /sync-event
- *  - Validates body (done via express-validator in route).
- *  - Creates a new SyncEvent document.
- *  - Triggers check for 3 consecutive failures (bonus).
- */
 const createSyncEvent = async (req, res, next) => {
   try {
     const { deviceId, timestamp, totalFilesSync, totalErrors, internetSpeed } =
       req.body;
 
-    // Create and save the new sync event
     const newEvent = await SyncEvent.create({
       deviceId,
       timestamp,
@@ -23,7 +15,6 @@ const createSyncEvent = async (req, res, next) => {
       internetSpeed,
     });
 
-    // Bonus: Check for 3 consecutive failures
     await checkThreeConsecutiveFailures(deviceId);
 
     return res.status(201).json({
@@ -35,14 +26,6 @@ const createSyncEvent = async (req, res, next) => {
   }
 };
 
-/**
- * GET /device/:id/sync-history
- *  - :id is the deviceId
- *  - Query parameters: 
- *      - page (optional, default=1)
- *      - limit (optional, default=50)
- *  - Returns paginated history, sorted by timestamp DESC.
- */
 const getSyncHistory = async (req, res, next) => {
   try {
     const deviceId = req.params.id;
@@ -53,7 +36,6 @@ const getSyncHistory = async (req, res, next) => {
     if (isNaN(page) || page < 1) page = 1;
     if (isNaN(limit) || limit < 1) limit = 50;
 
-    // Count total documents for pagination metadata
     const totalCount = await SyncEvent.countDocuments({ deviceId });
 
     const events = await SyncEvent.find({ deviceId })
@@ -75,13 +57,6 @@ const getSyncHistory = async (req, res, next) => {
   }
 };
 
-/**
- * GET /devices/repeated-failures
- *  - Finds all devices that have more than 3 events where totalErrors > 0.
- *  - Returns an array of objects: { deviceId, failureCount }
- *
- * Note: We use MongoDB aggregation to group by deviceId and count failures.
- */
 const getDevicesWithRepeatedFailures = async (req, res, next) => {
   try {
     const aggregationPipeline = [

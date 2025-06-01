@@ -11,15 +11,7 @@ const {
 
 const validateRequest = require('../middleware/validateRequest');
 
-/**
- * POST /sync-event
- * Body Params:
- *  - deviceId: string, required
- *  - timestamp: ISO8601 string or Date, required
- *  - totalFilesSync: integer >=0, required
- *  - totalErrors: integer >=0, required
- *  - internetSpeed: number >=0, required
- */
+
 router.post(
   '/sync-event',
   [
@@ -54,14 +46,7 @@ router.post(
   createSyncEvent
 );
 
-/**
- * GET /device/:id/sync-history
- * Path Param:
- *  - id: deviceId (string)
- * Query Params (optional):
- *  - page: integer >= 1 (default: 1)
- *  - limit: integer >= 1 (default: 50)
- */
+
 router.get(
   '/device/:id/sync-history',
   [
@@ -84,10 +69,6 @@ router.get(
   getSyncHistory
 );
 
-/**
- * GET /devices/repeated-failures
- * No parameters. Returns devices with >3 failed syncs.
- */
 router.get(
   '/devices/repeated-failures',
   getDevicesWithRepeatedFailures

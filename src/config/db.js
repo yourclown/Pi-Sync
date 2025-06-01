@@ -1,13 +1,7 @@
-// src/config/db.js
-
 
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-/**
- * Connect to MongoDB using MONGODB_URI from process.env.
- * Export the connection function.
- */
 const connectDB = async () => {
   try {
     const uri = process.env.MONGODB_URI;
@@ -22,7 +16,6 @@ const connectDB = async () => {
     await mongoose.connect(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      // Additional options can be added here for production
     });
 
     console.log('MongoDB connected successfully.');

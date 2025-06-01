@@ -40,7 +40,6 @@ const SyncEventSchema = new mongoose.Schema(
   }
 );
 
-// Compound index for faster lookups of a device's history by time desc
 SyncEventSchema.index({ deviceId: 1, timestamp: -1 });
 
 module.exports = mongoose.model('SyncEvent', SyncEventSchema);
